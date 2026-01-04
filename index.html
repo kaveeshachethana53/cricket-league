@@ -69,6 +69,42 @@
 <a href="https://docs.google.com/forms/d/e/1FAIpQLSevzWRiVSIHBOCp5Sbiv4F6Usr48ypewDi18W_FXLHQXCtISQ/viewform?usp=dialog" target="_blank">
   <button>Add Player</button>
 </a>
+<h2>Registered Players</h2>
+
+<div id="players" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;"></div>
+
+<script>
+  const sheetId = "1ABCdefGHIJKlmnOPQrstUVwxYZ123456";
+  
+  const sheetName = "Form Responses 1";
+  const url = `https://opensheet.elk.sh/${sheetId}/${sheetName}`;
+
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("players");
+
+      data.forEach(p => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid #ccc";
+        card.style.padding = "10px";
+        card.style.borderRadius = "8px";
+
+        const photoLink = p["Player Photo"];
+        const imgUrl = photoLink ? photoLink.replace("open?", "uc?export=view&") : "";
+
+        card.innerHTML = `
+          <img src="${imgUrl}" style="width:100%;height:180px;object-fit:cover;border-radius:6px;">
+          <h3>${p["Player Name"]}</h3>
+          <p>Age: ${p["Age"]}</p>
+          <p>Team: ${p["Team Name"]}</p>
+          <p>Role: ${p["Role"]}</p>
+        `;
+
+        container.appendChild(card);
+      });
+    });
+</script>
 
     <div class="form-box">
       <h2>ක්‍රීඩකයාගේ විස්තර ඇතුළත් කරන්න</h2>
