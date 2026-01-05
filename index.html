@@ -81,22 +81,50 @@
 <script>
   function addPlayer() {
     const name = document.getElementById("name").value;
+    const age = document.getElementById("age").value;
+    const role = document.getElementById("role").value;
+    const details = document.getElementById("details").value;
+    const photoInput = document.getElementById("photo");
 
-    if (name === "") {
-      alert("Name eka dala add karanna");
+    if (name === "" || photoInput.files.length === 0) {
+      alert("නම සහ පොටෝ එක අනිවාර්යයි");
       return;
     }
 
-    document.getElementById("players").innerHTML +=
-      "<p>" + name + "</p>";
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const card = document.createElement("div");
+      card.className = "player-card";
+      card.innerHTML = `
+        <img src="${e.target.result}">
+        <div>
+          <h3>${name}</h3>
+          <p><b>වයස:</b> ${age}</p>
+          <p><b>භූමිකාව:</b> ${role}</p>
+          <p>${details}</p>
+        </div>
+      `;
+      document.getElementById("players").appendChild(card);
+    };
+    reader.readAsDataURL(photoInput.files[0]);
+
+    const message =
+      "🏏 Cricket League Registration%0A%0A" +
+      "නම: " + name + "%0A" +
+      "වයස: " + age + "%0A" +
+      "භූමිකාව: " + role + "%0A" +
+      "විස්තර: " + details;
+
+    window.open("https://wa.me/?text=" + message, "_blank");
 
     document.getElementById("name").value = "";
+    document.getElementById("age").value = "";
+    document.getElementById("role").value = "";
+    document.getElementById("details").value = "";
+    document.getElementById("photo").value = "";
   }
 </script>
 
-<div id="players" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;"></div>
-
-<script>
   const sheetId = "1ABCdefGHIJKlmnOPQrstUVwxYZ123456";
   
   const sheetName = "Form Responses 1";
