@@ -2,7 +2,7 @@
 <html lang="si">
 <head>
   <meta charset="UTF-8">
-  <title>Cricket League Registration</title>
+  <title>Cricket League</title>
 
   <style>
     body {
@@ -11,7 +11,7 @@
     }
 
     .container {
-      max-width: 600px;
+      max-width: 700px;
       background: #fff;
       padding: 20px;
       margin: 30px auto;
@@ -29,41 +29,38 @@
       margin-top: 10px;
     }
 
-    input, textarea, select {
+    input, textarea, select, button {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
     }
 
     button {
-      margin-top: 15px;
-      width: 100%;
-      padding: 10px;
       background: #1f3c88;
       color: white;
       border: none;
       font-size: 16px;
       cursor: pointer;
+      margin-top: 15px;
     }
 
     .player-card {
-      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
       padding: 10px;
       margin-top: 15px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
+      background: #fafafa;
     }
 
     .player-card img {
-      width: 100px;
+      width: 120px;
       margin-top: 10px;
-      display: block;
     }
 
     #msg {
       text-align: center;
-      margin-bottom: 10px;
       font-weight: bold;
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -71,11 +68,11 @@
 <body>
 
 <div class="container">
-  <h2>ක්‍රීඩකයාගේ ලියාපදිංචිය</h2>
+  <h2>ක්‍රීඩකයා එක් කරන්න</h2>
 
   <p id="msg"></p>
 
-  <label>ක්‍රීඩකයාගේ නම</label>
+  <label>නම</label>
   <input type="text" id="name">
 
   <label>වයස</label>
@@ -92,10 +89,10 @@
   <label>විස්තර</label>
   <textarea id="details"></textarea>
 
-  <label>Photo (Image file)</label>
-  <input type="file" id="photo" accept="image/*">
+  <label>Photo URL (Google Drive / Image link)</label>
+  <input type="text" id="photo">
 
-  <button onclick="addPlayer()">ක්‍රීඩකයා එක් කරන්න</button>
+  <button onclick="addPlayer()">Add Player</button>
 </div>
 
 <div class="container">
@@ -104,52 +101,33 @@
 </div>
 
 <script>
-let players = JSON.parse(localStorage.getItem("players")) || [];
-
-// page load වෙද්දී existing players show
-window.onload = function () {
-  players.forEach(p => showPlayer(p));
-};
-
+const WEB_APP_URL = "YOUR_WEB_APP_URL_HERE";
+https://script.google.com/macros/s/%E2%80%A6%E2%80%A6/exec
 function addPlayer() {
   const name = document.getElementById("name").value;
   const age = document.getElementById("age").value;
   const role = document.getElementById("role").value;
   const details = document.getElementById("details").value;
-  const photoFile = document.getElementById("photo").files[0];
+  const photo = document.getElementById("photo").value;
   const msg = document.getElementById("msg");
 
   msg.style.color = "red";
   msg.innerHTML = "";
 
-  if (name === "" || age === "" || role === "") {
-    msg.innerHTML = "කරුණාකර අත්‍යවශ්‍ය තොරතුරු පුරවන්න";
+  if (!name || !age || !role) {
+    msg.innerHTML = "අත්‍යවශ්‍ය තොරතුරු පුරවන්න";
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = function () {
-    const player = {
-      name,
-      age,
-      role,
-      details,
-      photo: reader.result
-    };
-
-    players.push(player);
-    localStorage.setItem("players", JSON.stringify(players));
-    showPlayer(player);
-
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    body: JSON.stringify({ name, age, role, details, photo })
+  })
+  .then(() => {
     msg.style.color = "green";
-    msg.innerHTML = "ක්‍රීඩකයා සාර්ථකව එකතු කරන ලදී ✅";
-  };
-
-  if (photoFile) {
-    reader.readAsDataURL(photoFile);
-  } else {
-    reader.onload();
-  }
+    msg.innerHTML = "ක්‍රීඩකයා එකතු විය ✅";
+    loadPlayers();
+  });
 
   document.getElementById("name").value = "";
   document.getElementById("age").value = "";
@@ -158,20 +136,29 @@ function addPlayer() {
   document.getElementById("photo").value = "";
 }
 
-function showPlayer(p) {
-  document.getElementById("players").innerHTML += `
-    <div class="player-card">
-      <b>නම:</b> ${p.name}<br>
-      <b>වයස:</b> ${p.age}<br>
-      <b>භූමිකාව:</b> ${p.role}<br>
-      <b>විස්තර:</b> ${p.details || "-"}<br>
-      ${p.photo ? `<img src="${p.photo}">` : ""}
-    </div>
-  `;
+function loadPlayers() {
+  fetch(WEB_APP_URL + "?read=true")
+    .then(res => res.json())
+    .then(data => {
+      const playersDiv = document.getElementById("players");
+      playersDiv.innerHTML = "";
+
+      data.forEach(p => {
+        playersDiv.innerHTML += `
+          <div class="player-card">
+            <b>නම:</b> ${p.name}<br>
+            <b>වයස:</b> ${p.age}<br>
+            <b>භූමිකාව:</b> ${p.role}<br>
+            <b>විස්තර:</b> ${p.details || "-"}<br>
+            ${p.photo ? `<img src="${p.photo}">` : ""}
+          </div>
+        `;
+      });
+    });
 }
+
+window.onload = loadPlayers;
 </script>
 
 </body>
 </html>
-
-
