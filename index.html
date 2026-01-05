@@ -86,43 +86,36 @@
     const details = document.getElementById("details").value;
     const photoInput = document.getElementById("photo");
 
-    if (name === "" || photoInput.files.length === 0) {
-      alert("නම සහ පොටෝ එක අනිවාර්යයි");
-      return;
-    }
+    if (name === "") {
+  alert("නම අනිවාර්යයි");
+  return;
+}
 
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const card = document.createElement("div");
-      card.className = "player-card";
-      card.innerHTML = `
-        <img src="${e.target.result}">
-        <div>
-          <h3>${name}</h3>
-          <p><b>වයස:</b> ${age}</p>
-          <p><b>භූමිකාව:</b> ${role}</p>
-          <p>${details}</p>
-        </div>
-      `;
-      document.getElementById("players").appendChild(card);
-    };
-    reader.readAsDataURL(photoInput.files[0]);
+    if (photoInput.files.length > 0) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    createCard(e.target.result);
+  };
+  reader.readAsDataURL(photoInput.files[0]);
+} else {
+  createCard("");
+}
 
-    const message =
-      "🏏 Cricket League Registration%0A%0A" +
-      "නම: " + name + "%0A" +
-      "වයස: " + age + "%0A" +
-      "භූමිකාව: " + role + "%0A" +
-      "විස්තර: " + details;
+function createCard(img) {
+  const card = document.createElement("div");
+  card.className = "player-card";
+  card.innerHTML = `
+    ${img ? `<img src="${img}">` : ""}
+    <div>
+      <h3>${name}</h3>
+      <p><b>වයස:</b> ${age}</p>
+      <p><b>භූමිකාව:</b> ${role}</p>
+      <p>${details}</p>
+    </div>
+  `;
+  document.getElementById("players").appendChild(card);
+}
 
-    window.open("https://wa.me/?text=" + message, "_blank");
-
-    document.getElementById("name").value = "";
-    document.getElementById("age").value = "";
-    document.getElementById("role").value = "";
-    document.getElementById("details").value = "";
-    document.getElementById("photo").value = "";
-  }
 </script>
 
   const sheetId = "1ABCdefGHIJKlmnOPQrstUVwxYZ123456";
