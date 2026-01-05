@@ -123,8 +123,13 @@ function addPlayer() {
   }
 
   fetch(WEB_APP_URL, {
-    method: "POST",
-    body: JSON.stringify({ name, age, role, details, photo })
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ name, age, role, details, photo })
+});
+
   })
   .then(() => {
     msg.style.color = "green";
