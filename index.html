@@ -56,81 +56,122 @@
 
     .player-card img {
       width: 100px;
-      display: block;
       margin-top: 10px;
+      display: block;
+    }
+
+    #msg {
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
-    <h2>ක්‍රීඩකයාගේ ලියාපදිංචිය</h2>
+<div class="container">
+  <h2>ක්‍රීඩකයාගේ ලියාපදිංචිය</h2>
 
-    <label>ක්‍රීඩකයාගේ නම</label>
-    <input type="text" id="name">
+  <p id="msg"></p>
 
-    <label>වයස</label>
-    <input type="number" id="age">
+  <label>ක්‍රීඩකයාගේ නම</label>
+  <input type="text" id="name">
 
-    <label>භූමිකාව</label>
-    <select id="role">
-      <option value="">තෝරන්න</option>
-      <option>Batsman</option>
-      <option>Bowler</option>
-      <option>All-rounder</option>
-    </select>
+  <label>වයස</label>
+  <input type="number" id="age">
 
-    <label>විස්තර</label>
-    <textarea id="details"></textarea>
+  <label>භූමිකාව</label>
+  <select id="role">
+    <option value="">තෝරන්න</option>
+    <option>Batsman</option>
+    <option>Bowler</option>
+    <option>All-rounder</option>
+  </select>
 
-    <label>Photo (Image file)</label>
-    <input type="file" id="photo" accept="image/*">
+  <label>විස්තර</label>
+  <textarea id="details"></textarea>
 
-    <button onclick="addPlayer()">ක්‍රීඩකයා එක් කරන්න</button>
-  </div>
+  <label>Photo (Image file)</label>
+  <input type="file" id="photo" accept="image/*">
 
-  <div class="container">
-    <h2>ක්‍රීඩකයින්</h2>
-    <div id="players"></div>
-  </div>
+  <button onclick="addPlayer()">ක්‍රීඩකයා එක් කරන්න</button>
+</div>
+
+<div class="container">
+  <h2>ක්‍රීඩකයින්</h2>
+  <div id="players"></div>
+</div>
 
 <script>
-function addPlayer() {
+let players = JSON.parse(localStorage.getItem("players")) || [];
 
+// page load වෙද්දී existing players show
+window.onload = function () {
+  players.forEach(p => showPlayer(p));
+};
+
+function addPlayer() {
   const name = document.getElementById("name").value;
   const age = document.getElementById("age").value;
   const role = document.getElementById("role").value;
   const details = document.getElementById("details").value;
-  const photo = document.getElementById("photo").files[0];
+  const photoFile = document.getElementById("photo").files[0];
+  const msg = document.getElementById("msg");
+
+  msg.style.color = "red";
+  msg.innerHTML = "";
 
   if (name === "" || age === "" || role === "") {
+    msg.innerHTML = "කරුණාකර අත්‍යවශ්‍ය තොරතුරු පුරවන්න";
     return;
   }
 
-  let imgHTML = "";
-  if (photo) {
-    const imgURL = URL.createObjectURL(photo);
-    imgHTML = `<img src="${imgURL}">`;
+  const reader = new FileReader();
+  reader.onload = function () {
+    const player = {
+      name,
+      age,
+      role,
+      details,
+      photo: reader.result
+    };
+
+    players.push(player);
+    localStorage.setItem("players", JSON.stringify(players));
+    showPlayer(player);
+
+    msg.style.color = "green";
+    msg.innerHTML = "ක්‍රීඩකයා සාර්ථකව එකතු කරන ලදී ✅";
+  };
+
+  if (photoFile) {
+    reader.readAsDataURL(photoFile);
+  } else {
+    reader.onload();
   }
 
-  document.getElementById("players").innerHTML += `
-    <div class="player-card">
-      <b>නම:</b> ${name}<br>
-      <b>වයස:</b> ${age}<br>
-      <b>භූමිකාව:</b> ${role}<br>
-      <b>විස්තර:</b> ${details}
-      ${imgHTML}
-    </div>
-  `;
   document.getElementById("name").value = "";
   document.getElementById("age").value = "";
   document.getElementById("role").value = "";
   document.getElementById("details").value = "";
   document.getElementById("photo").value = "";
 }
+
+function showPlayer(p) {
+  document.getElementById("players").innerHTML += `
+    <div class="player-card">
+      <b>නම:</b> ${p.name}<br>
+      <b>වයස:</b> ${p.age}<br>
+      <b>භූමිකාව:</b> ${p.role}<br>
+      <b>විස්තර:</b> ${p.details || "-"}<br>
+      ${p.photo ? `<img src="${p.photo}">` : ""}
+    </div>
+  `;
+}
 </script>
 
 </body>
 </html>
+
 
