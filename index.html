@@ -1,217 +1,140 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cricket League</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>Cricket League Registration</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 20px;
+      background: #f2f2f2;
     }
-    h1 {
-      text-align: center;
-      color: #1e3a8a;
-    }
+
     .container {
-      max-width: 900px;
-      margin: auto;
-    }
-    .form-box, .players {
-      background: #ffffff;
+      max-width: 600px;
+      background: #fff;
       padding: 20px;
+      margin: 30px auto;
       border-radius: 10px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+
+    h2 {
+      text-align: center;
+    }
+
     label {
+      font-weight: bold;
       display: block;
       margin-top: 10px;
-      font-weight: bold;
     }
-    input, textarea, button {
+
+    input, textarea, select {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
     }
+
     button {
-      background: #1e3a8a;
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background: #1f3c88;
       color: white;
       border: none;
-      border-radius: 5px;
+      font-size: 16px;
       cursor: pointer;
-      margin-top: 15px;
     }
-    button:hover {
-      background: #2563eb;
-    }
+
     .player-card {
-      display: flex;
-      gap: 15px;
+      background: #fafafa;
+      padding: 10px;
       margin-top: 15px;
-      padding: 15px;
+      border-radius: 8px;
       border: 1px solid #ddd;
-      border-radius: 8px;
     }
+
     .player-card img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 8px;
+      width: 100px;
+      display: block;
+      margin-top: 10px;
     }
   </style>
 </head>
+
 <body>
+
   <div class="container">
-    <h1>🏏 Cricket League</h1>
-<a href="https://docs.google.com/forms/d/e/1FAIpQLSevzWRiVSIHBOCp5Sbiv4F6Usr48ypewDi18W_FXLHQXCtISQ/viewform?usp=dialog" target="_blank">
-  <button>Add Player</button>
-</a>
-<h2>Registered Players</h2>
-<h2>Player Registration</h2>
+    <h2>ක්‍රීඩකයාගේ ලියාපදිංචිය</h2>
 
-<input type="text" id="name" placeholder="Player Name">
-<button onclick="addPlayer()">Add Player</button>
+    <label>ක්‍රීඩකයාගේ නම</label>
+    <input type="text" id="name">
 
-<h3>Players List</h3>
-<div id="players"></div>
+    <label>වයස</label>
+    <input type="number" id="age">
 
-<script>
-  function addPlayer() {
-    const name = document.getElementById("name").value;
-    const age = document.getElementById("age").value;
-    const role = document.getElementById("role").value;
-    const details = document.getElementById("details").value;
-    const photoInput = document.getElementById("photo");
+    <label>භූමිකාව</label>
+    <select id="role">
+      <option value="">තෝරන්න</option>
+      <option>Batsman</option>
+      <option>Bowler</option>
+      <option>All-rounder</option>
+    </select>
 
-    if (name === "") {
-  alert("නම අනිවාර්යයි");
-  return;
-}
+    <label>විස්තර</label>
+    <textarea id="details"></textarea>
 
-    if (photoInput.files.length > 0) {
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    createCard(e.target.result);
-  };
-  reader.readAsDataURL(photoInput.files[0]);
-} else {
-  createCard("");
-}
+    <label>Photo (Image file)</label>
+    <input type="file" id="photo" accept="image/*">
 
-function createCard(img) {
-  const card = document.createElement("div");
-  card.className = "player-card";
-  card.innerHTML = `
-    ${img ? `<img src="${img}">` : ""}
-    <div>
-      <h3>${name}</h3>
-      <p><b>වයස:</b> ${age}</p>
-      <p><b>භූමිකාව:</b> ${role}</p>
-      <p>${details}</p>
-    </div>
-  `;
-  document.getElementById("players").appendChild(card);
-}
-
-</script>
-
-  const sheetId = "1ABCdefGHIJKlmnOPQrstUVwxYZ123456";
-  
-  const sheetName = "Form Responses 1";
-  const url = `https://opensheet.elk.sh/${sheetId}/${sheetName}`;
-
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("players");
-
-      data.forEach(p => {
-        const card = document.createElement("div");
-        card.style.border = "1px solid #ccc";
-        card.style.padding = "10px";
-        card.style.borderRadius = "8px";
-
-        const photoLink = p["Player Photo"];
-        const imgUrl = photoLink ? photoLink.replace("open?", "uc?export=view&") : "";
-
-        card.innerHTML = `
-          <img src="${imgUrl}" style="width:100%;height:180px;object-fit:cover;border-radius:6px;">
-          <h3>${p["Player Name"]}</h3>
-          <p>Age: ${p["Age"]}</p>
-          <p>Team: ${p["Team Name"]}</p>
-          <p>Role: ${p["Role"]}</p>
-        `;
-
-        container.appendChild(card);
-      });
-    });
-</script>
-
-    <div class="form-box">
-      <h2>ක්‍රීඩකයාගේ විස්තර ඇතුළත් කරන්න</h2>
-      <label>ක්‍රීඩකයාගේ නම</label>
-      <input type="text" id="name" />
-
-      <label>වයස</label>
-      <input type="number" id="age" />
-
-      <label>භූමිකාව (Batsman / Bowler / All-rounder)</label>
-      <input type="text" id="role" />
-
-      <label>විස්තර</label>
-      <textarea id="details"></textarea>
-
-      <label>පොටෝ (Image file)</label>
-      <input type="file" id="photo" accept="image/*" />
-
-      <button onclick="addPlayer()">ක්‍රීඩකයා එක් කරන්න</button>
-    </div>
-
-    <div class="players" id="players">
-      <h2>ක්‍රීඩකයින්</h2>
-    </div>
+    <button onclick="addPlayer()">ක්‍රීඩකයා එක් කරන්න</button>
   </div>
 
-  <script>
-    function addPlayer() {
-      const name = document.getElementById('name').value;
-      const age = document.getElementById('age').value;
-      const role = document.getElementById('role').value;
-      const details = document.getElementById('details').value;
-      const photoInput = document.getElementById('photo');
+  <div class="container">
+    <h2>ක්‍රීඩකයින්</h2>
+    <div id="players"></div>
+  </div>
 
-      if (!name || !photoInput.files[0]) {
-        alert('නම සහ පොටෝ එක අනිවාර්යයි');
-        return;
-      }
+<script>
+function addPlayer() {
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const card = document.createElement('div');
-        card.className = 'player-card';
-        card.innerHTML = `
-          <img src="${e.target.result}" />
-          <div>
-            <h3>${name}</h3>
-            <p><b>වයස:</b> ${age}</p>
-            <p><b>භූමිකාව:</b> ${role}</p>
-            <p>${details}</p>
-          </div>
-        `;
-        document.getElementById('players').appendChild(card);
-      };
-      reader.readAsDataURL(photoInput.files[0]);
+  const name = document.getElementById("name").value;
+  const age = document.getElementById("age").value;
+  const role = document.getElementById("role").value;
+  const details = document.getElementById("details").value;
+  const photo = document.getElementById("photo").files[0];
 
-      // clear form
-      document.getElementById('name').value = '';
-      document.getElementById('age').value = '';
-      document.getElementById('role').value = '';
-      document.getElementById('details').value = '';
-      document.getElementById('photo').value = '';
-    }
-  </script>
+  if (name === "" || age === "" || role === "") {
+    alert("කරුණාකර සියලුම අත්‍යවශ්‍ය තොරතුරු පුරවන්න");
+    return;
+  }
+
+  let imgHTML = "";
+  if (photo) {
+    const imgURL = URL.createObjectURL(photo);
+    imgHTML = `<img src="${imgURL}">`;
+  }
+
+  document.getElementById("players").innerHTML += `
+    <div class="player-card">
+      <b>නම:</b> ${name}<br>
+      <b>වයස:</b> ${age}<br>
+      <b>භූමිකාව:</b> ${role}<br>
+      <b>විස්තර:</b> ${details}
+      ${imgHTML}
+    </div>
+  `;
+
+  alert("ඔබගේ තොරතුරු සාර්ථකව එකතු කරන ලදී");
+
+  document.getElementById("name").value = "";
+  document.getElementById("age").value = "";
+  document.getElementById("role").value = "";
+  document.getElementById("details").value = "";
+  document.getElementById("photo").value = "";
+}
+</script>
+
 </body>
 </html>
+
