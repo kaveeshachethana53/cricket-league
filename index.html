@@ -103,31 +103,8 @@
 <script>
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz_UDsZTVgbT8cjCu0zBFxV-VnPFhe57t5wfwcIR11v4RMgzAO9KW1dIi5Ly5F21/exec";
 
-/* page load වෙද්දි players load කරන function */
+/* page load වෙද්දි players load කරන්න */
 window.onload = loadPlayers;
-
-function loadPlayers() {
-  fetch(WEB_APP_URL)
-    .then(res => res.json())
-    .then(data => {
-      const playersDiv = document.getElementById("players");
-      playersDiv.innerHTML = "";
-
-      data.forEach(p => {
-        playersDiv.innerHTML += `
-          <div class="player-card">
-            <b>නම:</b> ${p.name}<br>
-            <b>වයස:</b> ${p.age}<br>
-            <b>භූමිකාව:</b> ${p.role}<br>
-            <b>විස්තර:</b> ${p.details}<br>
-            ${p.photo ? `<img src="${p.photo}" width="100">` : ""}
-          </div>
-        `;
-      });
-    });
-}
-</script>
-
 
 function addPlayer() {
   const name = document.getElementById("name").value;
@@ -163,7 +140,7 @@ function addPlayer() {
 }
 
 function loadPlayers() {
-  fetch(WEB_APP_URL + "?read=true")
+  fetch(WEB_APP_URL)
     .then(res => res.json())
     .then(data => {
       const playersDiv = document.getElementById("players");
@@ -182,8 +159,6 @@ function loadPlayers() {
       });
     });
 }
-
-window.onload = loadPlayers;
 </script>
 
 </body>
